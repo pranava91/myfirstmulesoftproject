@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:twilio="http://www.mulesoft.org/schema/mule/twilio" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/twilio http://www.mulesoft.org/schema/mule/twilio/current/mule-twilio.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="24be0a6b-fae7-4d03-ac43-c992705cfc76" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<twilio:config name="Twilio_Connector_Config" doc:name="Twilio Connector Config" doc:id="71ec0480-2a37-4426-8046-20a0a8afaa49" >
+		<twilio:account-sid-auth-token-connection username="pulluripranava@gmail.com" password="abcdefghij@123456789" />
+	</twilio:config>
+	<flow name="twiliocallingconnFlow" doc:id="85c2f7ae-c06f-4c01-9130-2a02e3e36ae0" >
+		<http:listener doc:name="Listener" doc:id="7c5c93d3-ab52-4cc9-8ff6-dbcd8fc7f017" config-ref="HTTP_Listener_config" path="/calling"/>
+		<ee:transform doc:name="Transform Message" doc:id="0565e6da-733c-4bc1-ab17-91f6ec0ccc82" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/x-www-form-urlencoded
+---
+{
+	
+	Url: p('twilio.url'),
+	Form: p('twilio.form'),
+	To: p('twilio.to')
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<twilio:create20100401-accounts-callsjson-by-account-sid doc:name="Create Call" doc:id="b3b0a1da-59cf-48e1-8928-54b87cc9b851" config-ref="Twilio_Connector_Config" accountSid="ACf74f28829cae63c3eec7ab849b7afe2b">
+			<twilio:accounts-calls-content ><![CDATA[hi this pranava]]></twilio:accounts-calls-content>
+		</twilio:create20100401-accounts-callsjson-by-account-sid>
+		<logger level="INFO" doc:name="Logger" doc:id="ae70d42d-c9ce-4bc7-9fb2-08a0a4cbc2f0" message="#[payload]"/>
+	</flow>
+</mule>
