@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:servicenow="http://www.mulesoft.org/schema/mule/servicenow"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/servicenow http://www.mulesoft.org/schema/mule/servicenow/current/mule-servicenow.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="dataweaveFlow" doc:id="80087017-519f-4071-8aae-be95b02cc385" >
+		<http:listener doc:name="Listener" doc:id="e024e34c-4c53-445d-915e-c4956a89c902" config-ref="HTTP_Listener_config" path="/obj/{CFlag}"/>
+		<set-variable value="#[attributes.uriParams.CFlag]" doc:name="Set Variable" doc:id="95c1d944-adb9-45c2-a691-f622f686e88b" variableName="flag"/>
+		<os:store doc:name="Store" doc:id="f6941ee9-fd6a-4628-8b66-03fdd65c95ef" key="flag_name"/>
+		<os:retrieve doc:name="Retrieve" doc:id="13c13c35-635b-45ee-96a6-b6c97f52e2c3" key="flag">
+			<os:default-value ><![CDATA[#[payload]]]></os:default-value>
+		</os:retrieve>
+		<logger level="INFO" doc:name="Logger" doc:id="cde3f508-cf6a-4a53-ade0-84a986df7799" message="#[payload]"/>
+		<set-payload value="#[message.payload as String]" doc:name="Set Payload" doc:id="2dc47f9b-8909-4d9a-8624-f8e8b99d516c" />
+	</flow>
+</mule>
